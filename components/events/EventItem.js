@@ -11,7 +11,7 @@ export default function EventItem(props) {
     year: "numeric",
   });
   const formattedAddress = location.replace(",", "\n");
-  const exploreLink = `events/${"id"}`;
+  const exploreLink = `events/${id}`;
   return (
     <li className={classes.item}>
       <img src={"/" + image} alt={title} />
@@ -30,9 +30,9 @@ export default function EventItem(props) {
         <div className={classes.actions}>
           <Button link={exploreLink}>
             <span>Explore Event</span>
-            <span className={classes.icon}>
-              <ArrowRightIcon />
-            </span>
+              <span className={classes.icon}>
+                <ArrowRightIcon />
+              </span>
           </Button>
         </div>
       </div>
