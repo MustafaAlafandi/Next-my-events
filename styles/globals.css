@@ -34,11 +34,20 @@ a {
   color: inherit;
   text-decoration: none;
 }
-li{
+
+li {
   list-style: none;
 }
+
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
   }
+}
+
+.center {
+  display: block;
+  width: fit-content;
+  margin-right: auto;
+  margin-left: auto;
 }
