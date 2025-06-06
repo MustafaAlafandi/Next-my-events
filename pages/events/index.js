@@ -6,8 +6,7 @@ export default function AllEventsPage() {
   const events = getAllEvents();
   const router = useRouter();
   function findEventsHandler(year, month) {
-    let fullPath = "/events/" + year;
-    if (month) fullPath += "/" + month;
+    let fullPath = `events/${year}/${month}`;
     router.push(fullPath);
   }
   return (

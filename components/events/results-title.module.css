@@ -1,6 +1,13 @@
 .title {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
   margin: 2rem auto;
   width: 90%;
   max-width: 40rem;
   text-align: center;
+}
+
+.button{
+  width:fit-content;
 }

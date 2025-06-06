@@ -9,24 +9,25 @@ export default function FilteredEventsPage() {
   const router = useRouter();
   const filterData = router.query.slug;
 
-  const filteredYear = filterData[0] || undefined;
-  const filteredMonth = filterData[1] || undefined;
-
+  const filteredYear = filterData?.[0];
+  const filteredMonth = filterData?.[1];
+  let monthIsExist = true;
+  if (filteredMonth === "-") monthIsExist = false;
   const numYear = +filteredYear;
   const numMonth = +filteredMonth;
 
   if (
     isNaN(numYear) ||
-    isNaN(numMonth) ||
+    (isNaN(numMonth) && monthIsExist) ||
     numYear > 2030 ||
     numYear < 2021 ||
-    numMonth < 1 ||
-    numMonth > 12
+    (numMonth < 1 && monthIsExist) ||
+    (numMonth > 12 && monthIsExist)
   )
     return (
       <>
         <ErrorAlert>
-          <p>Invalid filter. Please adjust your values!</p>;
+          <p>Invalid filter. Please adjust your values!</p>
         </ErrorAlert>
         <div className="center">
           <Button link="/events">Show All Events</Button>
@@ -35,17 +36,19 @@ export default function FilteredEventsPage() {
     );
   const filteredEvents = getFilteredEvents({
     year: numYear,
-    month: numMonth,
+    month: monthIsExist ? numMonth : undefined,
   });
   if (!filteredEvents || filteredEvents.length === 0) {
-    return (<>
+    return (
+      <>
         <ErrorAlert>
           <p>No events found for the chosen filter!</p>
         </ErrorAlert>
         <div className="center">
           <Button link="/events">Show All Events</Button>
         </div>
-      </>);
+      </>
+    );
   }
   const date = new Date(numYear, numMonth - 1);
   return (

@@ -15,7 +15,9 @@
   object-fit: cover;
   height: 10rem;
 }
-
+.summary{
+  color:black;
+}
 .content {
   width: 100%;
   padding: 0 1rem;
