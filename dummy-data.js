@@ -18,10 +18,10 @@ export async function getFeaturedEvents() {
   return data.filter((event) => event.isFeatured);
 }
 
-export function getFilteredEvents(dateFilter) {
+export async function getFilteredEvents(dateFilter) {
   const { year, month } = dateFilter;
-
-  let filteredEvents = DUMMY_EVENTS.filter((event) => {
+  const events = await getAllEvents();
+  let filteredEvents = events.filter((event) => {
     const eventDate = new Date(event.date);
     return (
       eventDate.getFullYear() === year &&
