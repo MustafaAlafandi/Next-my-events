@@ -5,6 +5,7 @@ export default function App({ Component, pageProps }) {
   return (
     <Layout>
       <Head>
+        <title>My Events</title>
         <meta
           name="veiwport"
           content="initial-scale = 1.0, width=device-width"

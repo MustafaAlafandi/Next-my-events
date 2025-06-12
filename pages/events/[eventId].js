@@ -4,6 +4,7 @@ import EventSummary from "@/components/event-detail/event-summary";
 import ErrorAlert from "@/components/ui/error-alert";
 import { getEventById, getFeaturedEvents } from "@/dummy-data";
 import Head from "next/head";
+import Image from "next/image";
 export default function EventDetailPage(props) {
   const event = props.event;
   if (!event) {
