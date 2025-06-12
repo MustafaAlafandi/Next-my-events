@@ -18,10 +18,7 @@ export default function EventDetailPage(props) {
     <>
       <Head>
         <title>{event.title}</title>
-        <meta
-          name="description"
-          content="Show your event details"
-        />
+        <meta name="description" content={event.description} />
       </Head>
       <EventSummary title={event.title} />
       <EventLogistics

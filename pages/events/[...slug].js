@@ -29,7 +29,15 @@ export default function FilteredEventsPage(/* props */) {
       setLoadedEvents(events);
     }
   }, [data]);
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading)
+    return (
+      <p>
+        <Head>
+          <title>Loading...</title>
+        </Head>
+        Loading...
+      </p>
+    );
   // let { filteredEvents, date } = props;
   const filteredYear = filterData[0];
   const filteredMonth = filterData?.[1];
@@ -50,6 +58,9 @@ export default function FilteredEventsPage(/* props */) {
   ) {
     return (
       <>
+        <Head>
+          <title>Invalid Filter</title>
+        </Head>
         <ErrorAlert>
           <p>Invalid filter. Please adjust your values!</p>
         </ErrorAlert>
@@ -70,6 +81,9 @@ export default function FilteredEventsPage(/* props */) {
   if (!filteredEvents || filteredEvents.length === 0) {
     return (
       <>
+        <Head>
+          <title>No Event Found</title>
+        </Head>
         <ErrorAlert>
           <p>No events found for the chosen filter!</p>
         </ErrorAlert>
@@ -81,11 +95,17 @@ export default function FilteredEventsPage(/* props */) {
   }
   return (
     <>
-    <Head>
-        <title>Filtered Events By Date</title>
+      <Head>
+        <title>
+          Events in {(monthIsExist ? filteredMonth + "/" : "") + filteredYear}
+        </title>
         <meta
           name="description"
-          content="This page show filtered events by date."
+          content={
+            "All Events for" +
+            (monthIsExist ? filteredMonth + "/" : "") +
+            filteredYear
+          }
         />
       </Head>
       <ResultsTitle
