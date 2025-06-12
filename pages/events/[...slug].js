@@ -6,6 +6,7 @@ import ErrorAlert from "@/components/ui/error-alert";
 import { getFilteredEvents } from "@/dummy-data";
 import { useRouter } from "next/router";
 import useSWR from "swr";
+import Head from "next/head";
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
 export default function FilteredEventsPage(/* props */) {
   const [loaddedEvents, setLoadedEvents] = useState();
@@ -80,6 +81,13 @@ export default function FilteredEventsPage(/* props */) {
   }
   return (
     <>
+    <Head>
+        <title>Filtered Events By Date</title>
+        <meta
+          name="description"
+          content="This page show filtered events by date."
+        />
+      </Head>
       <ResultsTitle
         date={date}
         monthIsExist={monthIsExist}
