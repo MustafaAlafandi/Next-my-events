@@ -1,10 +1,10 @@
 import EventContent from "@/components/event-detail/event-content";
 import EventLogistics from "@/components/event-detail/event-logistics";
 import EventSummary from "@/components/event-detail/event-summary";
+import Comments from "@/components/input/comments";
 import ErrorAlert from "@/components/ui/error-alert";
-import { getEventById, getFeaturedEvents } from "@/dummy-data";
+import { getEventById, getFeaturedEvents } from "@/helper/api-util";
 import Head from "next/head";
-import Image from "next/image";
 export default function EventDetailPage(props) {
   const event = props.event;
   if (!event) {
@@ -31,6 +31,7 @@ export default function EventDetailPage(props) {
       <EventContent>
         <p>{event.description}</p>
       </EventContent>
+      <Comments eventId={event.id} />
     </>
   );
 }

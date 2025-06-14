@@ -3,7 +3,7 @@ import EventsList from "@/components/events/EventsList";
 import ResultsTitle from "@/components/events/results-title";
 import Button from "@/components/ui/Button";
 import ErrorAlert from "@/components/ui/error-alert";
-import { getFilteredEvents } from "@/dummy-data";
+import { getFilteredEvents } from "@/helper/api-util";
 import { useRouter } from "next/router";
 import useSWR from "swr";
 import Head from "next/head";
