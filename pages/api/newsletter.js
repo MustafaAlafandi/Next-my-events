@@ -1,20 +1,20 @@
-import {
-  buildDataPath,
-  readFile,
-  writeOnFile,
-} from "../../helper/backend-functions.js";
-export default function handler(req, res) {
-  console.log("body",req.body);
-console.log("method",req.method);
+import { MongoClient } from "mongodb";
+import "dotenv/config"
+export default async function handler(req, res) {
+  const email = req.body.email;
   if (req.method === "POST") {
-    const filePath = buildDataPath("newsletter");
-    let newsletter = readFile(filePath);
-    const data = { id: new Date().toDateString(), email: req.body.email };
-    newsletter.push(data);
-    newsletter = JSON.stringify(newsletter);
-    writeOnFile(filePath, newsletter);
-    res.status(200).json({ message: "Success" });
+    if (!email || !email.includes("@")) {
+      res.status(422).json({ message: "Invalid email address. " });
+    }
+    const url = process.env.MongoDBURL;
+    const dbName = "auth";
+    const client = new MongoClient(url);
+    await client.connect();
+    const db = client.db(dbName);
+    const collection = db.collection("emails");
+    await collection.insertOne({ email });
+    res.status(201).json({ message: "Signed Up" });
+    client.close();
   }
-  else
-  res.status(404).json({message: "Unsupported request"});
 }
+// mongodb+srv://mustafaalafandi1194:vE3COWazG2tg2Hfn@cluster0.2tp8rjv.mongodb.net/
