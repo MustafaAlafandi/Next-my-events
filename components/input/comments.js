@@ -28,12 +28,12 @@ function Comments(props) {
         setLoadComments(true);
       });
   }
-  // useEffect(() => {
-  //   fetch("/api/comments/" + eventId)
-  //     .then((res) => res.json())
-  //     .then((data) => setComments(data.comments));
-  //   setLoadComments(false);
-  // }, [loadComments]);
+  useEffect(() => {
+    fetch("/api/comments/" + eventId)
+      .then((res) => res.json())
+      .then((data) => setComments(data.comments));
+    setLoadComments(false);
+  }, [loadComments]);
   return (
     <section className={classes.comments}>
       <button onClick={toggleCommentsHandler}>
