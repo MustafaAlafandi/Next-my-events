@@ -1,24 +1,38 @@
-import { MongoClient } from "mongodb";
+import { connectDB, insertDocument, getArrayOfData } from "@/helper/db-util";
 export default async function handler(req, res) {
   const method = req.method;
   const eventId = req.query.eventId;
   const dbName = "events";
   const collectionName = "comments";
-  const url = process.env.MongoDBURL;
-  const client = new MongoClient(url);
-  await client.connect();
-  const db = client.db(dbName);
-  const collection = db.collection(collectionName);
+  let client;
+  try {
+    client = await connectDB();
+  } catch (error) {
+    res.status(500).json({ message: "Connecting with the database failed." });
+    return;
+  }
   if (method === "GET") {
-    const comments = await collection
-      .find({ eventId })
-      .sort({ _id: -1 })
-      .toArray();
-    res.status(200).json({ message: "Success", comments });
+    try {
+      const comments = await getArrayOfData(
+        client,
+        dbName,
+        collectionName,
+        { eventId },
+        { _id: -1 }
+      );
+      res.status(200).json({ message: "Success", comments });
+    } catch (error) {
+      res.status(500).json({ message: "Get data from database failed." });
+      return;
+    }
   } else if (method === "POST") {
     const comment = { ...req.body, eventId };
-    await collection.insertOne(comment);
-    res.status(200).json({ message: "Success", comment });
+    try {
+      await insertDocument(client, dbName, collectionName, comment);
+      res.status(200).json({ message: "Success", comment });
+    } catch (error) {
+      res.status(500).json({ message: "Inserting data to database failed." });
+    }
   }
   client.close();
 }

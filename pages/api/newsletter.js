@@ -1,17 +1,4 @@
-import { MongoClient } from "mongodb";
-import "dotenv/config";
-const url = process.env.MongoDBURL;
-const dbName = "auth";
-async function connectDB() {
-  const client = new MongoClient(url);
-  await client.connect();
-  return client;
-}
-async function insertDocument(client, document) {
-  const db = client.db(dbName);
-  const collection = db.collection("emails");
-  await collection.insertOne(document);
-}
+import { connectDB, insertDocument } from "@/helper/db-util";
 export default async function handler(req, res) {
   const email = req.body.email;
   if (req.method === "POST") {
@@ -26,7 +13,7 @@ export default async function handler(req, res) {
       return;
     }
     try {
-      await insertDocument(client, { email });
+      await insertDocument(client, "auth", "emails", { email });
       client.close();
     } catch (error) {
       res.status(500).json({ message: "Inserting data failed." });
