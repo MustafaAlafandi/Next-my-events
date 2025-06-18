@@ -19,10 +19,10 @@ function NewsletterRegistration() {
         headers: { "Content-Type": "application/json" },
       })
         .then((res) => {
-          if (res.ok) res.json();
-          res.json().then((data) => {
-            throw new Error(data.message || "Something went wrong!");
-          });
+          if (res.ok) return res.json();
+            res.json().then((data) => {
+              throw new Error(data.message || "Something went wrong!");
+            });
         })
         .then(() => {
           notificationCtx.showNotification({
