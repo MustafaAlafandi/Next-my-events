@@ -6,7 +6,6 @@ function NewsletterRegistration() {
     event.preventDefault();
     if (email || email.trim() !== "" || email.includes("@")) {
       const reqBody = { email };
-      console.log(reqBody);
       fetch("/api/newsletter", {
         method: "POST",
         body: JSON.stringify({ email: email }),

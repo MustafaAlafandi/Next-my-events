@@ -3,33 +3,26 @@ import EventsList from "@/components/events/EventsList";
 import ResultsTitle from "@/components/events/results-title";
 import Button from "@/components/ui/Button";
 import ErrorAlert from "@/components/ui/error-alert";
-import { getFilteredEvents } from "@/helper/api-util";
 import { useRouter } from "next/router";
-import useSWR from "swr";
 import Head from "next/head";
-const fetcher = (...args) => fetch(...args).then((res) => res.json());
-export default function FilteredEventsPage(/* props */) {
-  const [loaddedEvents, setLoadedEvents] = useState();
+export default function FilteredEventsPage() {
+  const [data, setData] = useState();
+  const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
   const filterData = router.query.slug;
+  let monthIsExist;
+  if (filterData) monthIsExist = filterData[1] === "-" ? false : true;
 
-  const { data, error, isLoading } = useSWR(
-    "https://nextjs-course-database-90f35-default-rtdb.firebaseio.com/events.json",
-    fetcher
-  );
   useEffect(() => {
-    if (data) {
-      const events = [];
-      for (const key in data) {
-        events.push({
-          ...data[key],
-          id: key,
-        });
-      }
-      setLoadedEvents(events);
+    async function getFilteredEvents() {
+      const res = await fetch(`/api/events/${filterData[0]}/${filterData[1]}`);
+      const data = await res.json();
+      setData(data);
+      setIsLoading(false);
     }
-  }, [data]);
-  if (isLoading)
+    if (filterData) getFilteredEvents();
+  }, [filterData]);
+  if (isLoading || !filterData)
     return (
       <p>
         <Head>
@@ -38,24 +31,8 @@ export default function FilteredEventsPage(/* props */) {
         Loading...
       </p>
     );
-  // let { filteredEvents, date } = props;
-  const filteredYear = filterData[0];
-  const filteredMonth = filterData?.[1];
-  let monthIsExist = true;
-  if (filteredMonth === "-") monthIsExist = false;
-  const numYear = +filteredYear;
-  const numMonth = +filteredMonth;
 
-  if (
-    /* props.error */
-    isNaN(numYear) ||
-    (isNaN(numMonth) && monthIsExist) ||
-    numYear > 2030 ||
-    numYear < 2021 ||
-    (numMonth < 1 && monthIsExist) ||
-    (numMonth > 12 && monthIsExist) ||
-    error
-  ) {
+  if (data.message === "Invalid Input") {
     return (
       <>
         <Head>
@@ -70,15 +47,7 @@ export default function FilteredEventsPage(/* props */) {
       </>
     );
   }
-  const date = new Date(numYear, numMonth - 1);
-  let filteredEvents = loaddedEvents?.filter((event) => {
-    const eventDate = new Date(event.date);
-    return (
-      numYear === eventDate.getFullYear() &&
-      (numMonth - 1 === eventDate.getMonth() || !monthIsExist)
-    );
-  });
-  if (!filteredEvents || filteredEvents.length === 0) {
+  if (!data.filteredEvents || data.filteredEvents.length === 0) {
     return (
       <>
         <Head>
@@ -93,71 +62,31 @@ export default function FilteredEventsPage(/* props */) {
       </>
     );
   }
+  const date = {
+    year: filterData[0],
+    month: filterData[1],
+  };
   return (
     <>
       <Head>
         <title>
-          Events in {(monthIsExist ? filteredMonth + "/" : "") + filteredYear}
+          Events in {(monthIsExist ? filterData[1] + "/" : "") + filterData[0]}
         </title>
         <meta
           name="description"
           content={
             "All Events for" +
-            (monthIsExist ? filteredMonth + "/" : "") +
-            filteredYear
+            (monthIsExist ? filterData[1] + "/" : "") +
+            filterData[0]
           }
         />
       </Head>
       <ResultsTitle
         date={date}
         monthIsExist={monthIsExist}
-        year={filteredYear}
+        year={filterData[1]}
       />
-      <EventsList items={filteredEvents} />
+      <EventsList items={data.filteredEvents} />
     </>
   );
 }
-// export async function getServerSideProps(context) {
-//   const { params } = context;
-// const filterData = params.slug;
-
-// const filteredYear = filterData?.[0];
-// const filteredMonth = filterData?.[1];
-// let monthIsExist = true;
-// if (filteredMonth === "-") monthIsExist = false;
-// const numYear = +filteredYear;
-// const numMonth = +filteredMonth;
-
-// if (
-//   isNaN(numYear) ||
-//   (isNaN(numMonth) && monthIsExist) ||
-//   numYear > 2030 ||
-//   numYear < 2021 ||
-//   (numMonth < 1 && monthIsExist) ||
-//   (numMonth > 12 && monthIsExist)
-// )
-//   return {
-//     props: {
-//       error: true,
-//     },
-// notFound: true,
-// redirect: {
-//   destination: "/error",
-// },
-// };
-// const filteredEvents = await getFilteredEvents({
-//   year: numYear,
-//   month: monthIsExist ? numMonth : undefined,
-// });
-
-// const date = {
-//   year: numYear,
-//   month: numMonth,
-// };
-// return {
-//   props: {
-//     filteredEvents,
-//     date,
-//   },
-// };
-// }

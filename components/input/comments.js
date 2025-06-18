@@ -15,7 +15,7 @@ function Comments(props) {
   }
 
   function addCommentHandler(commentData) {
-    fetch("/api/comments/" + eventId, {
+    fetch("/api/events/comments/" + eventId, {
       method: "POST",
       body: JSON.stringify({ ...commentData, eventId }),
       headers: {
@@ -24,12 +24,11 @@ function Comments(props) {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log("data", data);
         setLoadComments(true);
       });
   }
   useEffect(() => {
-    fetch("/api/comments/" + eventId)
+    fetch("/api/events/comments/" + eventId)
       .then((res) => res.json())
       .then((data) => setComments(data.comments));
     setLoadComments(false);
